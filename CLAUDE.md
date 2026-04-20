@@ -1,0 +1,71 @@
+# Introduction
+
+The point of this repository is for Andrew to learn about Agentic Engineering in order to prepare himself for an Applied AI Engineer role.  Andrew's goal is to start small and build knowledge slowly but steadily, thus creating a secure foundation of knowledge of the basic concepts and best practices of building systems with agents.
+
+# Andrew's Experience
+
+Andrew received a PhD in Mathematics in 2022, with a focus in topological dynamical systems and operator algebras.  Andrew also has extensive experience with Python and Rust, and has been exploring programming since 2013.  Andrew also enjoys electronic music production.
+
+# Resources
+- The [Agentic Design Patterns Book](https://irp.cdn-website.com/ca79032a/files/uploaded/Agentic-Design-Patterns.pdf) is a good resource for the basic concepts.  It can also be found in this repository [here](resources/Agentic-Design-Patterns.pdf).
+- The [Anthropic Engineering Blog](https://www.anthropic.com/engineering) is another good resource.
+
+# Projects
+
+Each project lives in its own subdirectory with its own `requirements.txt` and `.env`.
+
+## 01_tool_use_agent
+
+A simple tool-using agent that demonstrates the core agent loop.
+
+### Setup
+```bash
+cd 01_tool_use_agent
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Create a `.env` file in the project directory with your Anthropic API key:
+```
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+### Run
+```bash
+python agent.py "What is 42 * 17?"
+python agent.py  # interactive prompt
+```
+
+### Architecture
+- **`agent.py`** — The agent loop and CLI entry point. Sends messages to Claude, handles tool calls in a loop, and returns the final text response.
+- **`tools.py`** — Tool definitions (JSON schemas for the Anthropic API) and their Python implementations. Tools: `calculator`, `get_weather` (stubbed), `get_current_time`.
+
+## 02_sql_agent
+
+An agent that translates natural language questions into SQL queries against a SQLite database. Builds on project 01 by adding stateful tool interactions and agent-generated code (SQL).
+
+### Setup
+```bash
+cd 02_sql_agent
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Create a `.env` file (or it will fall back to `../.env` from project 01):
+```
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+### Run
+```bash
+python agent.py "What genres of music are in the database?"
+python agent.py "What is the longest track?"
+python agent.py  # interactive prompt
+```
+
+### Architecture
+- **`agent.py`** — Agent loop (same pattern as 01) with a SQL-focused system prompt.
+- **`tools.py`** — Three SQL tools: `list_tables`, `describe_table`, `run_sql` (SELECT only).
+- **`database.py`** — Creates an in-memory SQLite database seeded with a music catalog (artists, albums, tracks).
